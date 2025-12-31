@@ -1,255 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyle GPT</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-    font-family: Arial, sans-serif;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyle GPT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
     background-image: url('https://i.imgur.com/vcJPzK6.jpeg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    color: #333;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 10px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    background: #50508D;
     padding: 20px;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 10px 30px;
-        }
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid red;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
 
-        .container {
-            background: #50508D;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            max-width: 600px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-            border: 2px solid red; 
-        }
+h1 {
+    text-align: center;
+    color: #AFBEDA;
+    font-size: 24px;
+}
 
-        h1 {
-            margin-bottom: 20px;
-            color: #AFBEDA;
-            font-size: 24px;
-        }
+.chat-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border: 2px solid rgba(0,21,255,1);
+    border-radius: 4px;
+    background-image: url('https://i.imgur.com/b6LpQjm.jpeg');
+    background-size: cover;
+}
 
-        .chat-container {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 2px solid rgba(0, 21, 255, 1);
-            border-radius: 4px;
-            background-image: url('https://i.imgur.com/b6LpQjm.jpeg');
-            background-position: center;
-            background-size: cover;
-        }
+.input-container {
+    display: flex;
+    gap: 10px;
+}
 
-        .input-container {
-            display: flex;
-            width: 100%;
-        }
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background: #333;
+    color: #fff;
+}
 
-        input[type="text"] {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            font-size: 16px;
-            background: #333;
-            color: #e0e0e0;
-        }
+button {
+    background: #bb86fc;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        button {
-            background-color: #bb86fc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
+button:hover {
+    background: #3700b3;
+}
 
-        button:hover {
-            background-color: #3700b3;
-        }
+.response-block {
+    margin-top: 10px;
+    padding: 10px;
+    background: #1e1e1e;
+    border-radius: 4px;
+    position: relative;
+}
 
-        .response-block {
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            background-color: #1e1e1e;
-            position: relative;
-        }
+.user-query {
+    font-weight: bold;
+    color: #007bff;
+}
 
-        .user-query {
-            font-weight: bold;
-            color: #007bff;
-        }
+.ai-response {
+    margin-top: 5px;
+    white-space: pre-wrap;
+}
 
-        .ai-response {
-            margin-top: 5px;
-            white-space: pre-wrap;
-        }
+.copy-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: #6c757d;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+}
 
-        .copy-btn {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
 
-        .copy-btn:hover {
-            background-color: #5a6268;
-        }
+@keyframes fadeIn {
+    from {opacity:0}
+    to {opacity:1}
+}
 
-        .cp {
-            text-align: center;
-            margin-top: 5px;
-            color: white;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                align-items: flex-start;
-                padding-top: 20px;
-            }
-
-            .container {
-                width: 95%;
-                padding: 15px;
-            }
-
-            input[type="text"],
-            button {
-                font-size: 14px;
-            }
-
-            button {
-                padding: 8px 15px;
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
+.cp {
+    margin-top: 5px;
+    color: #fff;
+}
+</style>
 </head>
+
 <body>
-    <div class="container fade-in">
-        <h1>Kyle GPT <i class="fas fa-robot"></i></h1>
-        <div class="chat-container" id="taeMessage"></div>
-        <div class="input-container">
-            <input type="text" id="pogiInput" placeholder="Enter your question here" onkeydown="if(event.key === 'Enter') sendQuery()">
-            <button onclick="sendQuery()">Submit</button>
-        </div>
+
+<div class="container fade-in">
+    <h1>Kyle GPT <i class="fas fa-robot"></i></h1>
+    <div class="chat-container" id="taeMessage"></div>
+
+    <div class="input-container">
+        <input type="text" id="pogiInput" placeholder="Enter your question here"
+        onkeydown="if(event.key==='Enter') sendQuery()">
+        <button onclick="sendQuery()">Submit</button>
     </div>
-    <div class="cp">
-        <p>&copy;2024 | Kyle L. Bait-it | All rights reserved</p>
-    </div>
-    <audio class="song" loop autoplay>
-        <source src="./music/hbd.mpeg">
-        Your browser isn't invited for super fun audio time.
-    </audio>
-    <script>
-        async function sendQuery() {
-            const pogi = document.getElementById('pogiInput').value;
+</div>
 
-            if (!pogi) {
-                document.getElementById('taeMessage').innerText = 'Please provide a question.';
-                return;
-            }
+<div class="cp">
+    <p>&copy;2026 | Kyle L. Bait-it | All rights reserved</p>
+</div>
 
-            const taeMessage = document.getElementById('taeMessage');
-            taeMessage.innerHTML += `<div class="response-block fade-in"><span class="user-query">You:</span> ${pogi}</div>`;
-            document.getElementById('pogiInput').value = '';
+<script>
+let responseCount = 0;
 
-            const maasimIndicator = document.createElement('div');
-            maasimIndicator.className = 'response-block fade-in';
-            maasimIndicator.innerHTML = '<span class="user-query">AI:</span> <span class="ai-response">Typing...</span>';
-            taeMessage.appendChild(maasimIndicator);
-            taeMessage.scrollTop = taeMessage.scrollHeight;
+function escapeHTML(text) {
+    return text.replace(/[&<>"']/g, m => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#039;'
+    })[m]);
+}
 
-            try {
-                await new Promise(resolve => setTimeout(resolve, 2000));
+async function sendQuery() {
+    const input = document.getElementById('pogiInput');
+    const messageBox = document.getElementById('taeMessage');
+    const question = input.value.trim();
+    if (!question) return;
 
-                const supotResponse = await axios.get('https://hercai.onrender.com/v3/hercai', {
-                    params: {
-                        prompt: pogi,
-                        uid: 'some-unique-user-id'
-                    }
-                });
-                const taeData = supotResponse.data.gpt4;
+    input.value = '';
 
-                const finalResponse = `<div class="response-block fade-in"><span class="user-query">AI:</span> <span class="ai-response">${taeData}</span><br><small>Question asked by: User</small><button class="copy-btn" onclick="copyResponse('response-${taeMessage.children.length}')">Copy</button></div>`;
-                maasimIndicator.remove();
-                taeMessage.innerHTML += finalResponse;
-                taeMessage.scrollTop = taeMessage.scrollHeight;
-            } catch (error) {
-                console.error('Error:', error);
-                taeMessage.innerHTML += `<div class="response-block fade-in"><span class="user-query">AI:</span> <span class="ai-response">An error occurred while fetching the response.</span></div>`;
-            }
-        }
+    messageBox.innerHTML += `
+        <div class="response-block fade-in">
+            <span class="user-query">You:</span> ${escapeHTML(question)}
+        </div>`;
 
-        function copyResponse(responseId) {
-            const taeElement = document.getElementById(responseId);
-            const textarea = document.createElement('textarea');
-            textarea.value = taeElement.textContent.trim();
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('Response copied to clipboard');
-        }
+    const typing = document.createElement('div');
+    typing.className = 'response-block fade-in';
+    typing.innerHTML = `<span class="user-query">AI:</span> <span class="ai-response">Typing...</span>`;
+    messageBox.appendChild(typing);
+    messageBox.scrollTop = messageBox.scrollHeight;
 
-        window.addEventListener('load', () => {
-            const backgroundMusic = new Howl({
-                src: ['https://i.imgur.com/EOyl6c3.mp4'],
-                autoplay: true,
-                loop: true,
-                volume: 0.50,
-                onplayerror: function() {
-                    backgroundMusic.once('unlock', function() {
-                        backgroundMusic.play();
-                    });
-                }
-            });
+    try {
+        const res = await axios.get('https://hercai.onrender.com/v3/hercai', {
+            params: { prompt: question, uid: 'kyle-user' }
         });
-    </script>
+
+        const reply = escapeHTML(res.data.gpt4 || 'No response.');
+        responseCount++;
+        typing.remove();
+
+        messageBox.innerHTML += `
+        <div class="response-block fade-in" id="resp-${responseCount}">
+            <span class="user-query">AI:</span>
+            <span class="ai-response">${reply}</span>
+            <button class="copy-btn" onclick="copyResponse('resp-${responseCount}')">Copy</button>
+        </div>`;
+        messageBox.scrollTop = messageBox.scrollHeight;
+
+    } catch (e) {
+        typing.innerHTML = `<span class="ai-response">⚠️ Error fetching response.</span>`;
+    }
+}
+
+function copyResponse(id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
+    alert('Response copied!');
+}
+
+window.addEventListener('click', () => {
+    if (!window.bgMusic) {
+        window.bgMusic = new Howl({
+            src: ['https://i.imgur.com/EOyl6c3.mp4'],
+            loop: true,
+            volume: 0.5
+        });
+        window.bgMusic.play();
+    }
+});
+</script>
+
 </body>
 </html>
